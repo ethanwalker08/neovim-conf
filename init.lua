@@ -21,6 +21,12 @@ vim.opt.signcolumn = "yes"
 -- Decrease update time
 vim.opt.updatetime = 250
 
+vim.opt.tabstop = 4
+
+vim.schedule(function()
+	vim.opt.clipboard = "unnamedplus"
+end)
+
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
 vim.opt.timeoutlen = 300
@@ -49,6 +55,7 @@ require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 
+	{ import = "custom.plugins" },
 	{ -- Adds git related signs to the gutter, as well as utilities for managing changes
 		"lewis6991/gitsigns.nvim",
 		opts = {
@@ -62,6 +69,96 @@ require("lazy").setup({
 		},
 	},
 
+	{ -- Fuzzy Finder (files, lsp, etc)
+		"nvim-telescope/telescope.nvim",
+		event = "VimEnter",
+		branch = "0.1.x",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			{ -- If encountering errors, see telescope-fzf-native README for installation instructions
+				"nvim-telescope/telescope-fzf-native.nvim",
+
+				build = "make",
+
+				cond = function()
+					return vim.fn.executable("make") == 1
+				end,
+			},
+			{ "nvim-telescope/telescope-ui-select.nvim" },
+
+			-- Useful for getting pretty icons, but requires a Nerd Font.
+			{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+		},
+
+		config = function()
+			require("telescope").setup({
+				-- You can put your default mappings / updates / etc. in here
+				--  All the info you're looking for is in `:help telescope.setup()`
+				--
+				-- defaults = {
+				--   mappings = {
+				--     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+				--   },
+				-- },
+				-- pickers = {}
+				extensions = {
+					["ui-select"] = {
+						require("telescope.themes").get_dropdown(),
+					},
+				},
+			})
+
+			-- Enable Telescope extensions if they are installed
+			pcall(require("telescope").load_extension, "fzf")
+			pcall(require("telescope").load_extension, "ui-select")
+
+			local builtin = require("telescope.builtin")
+			vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
+			vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
+			vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
+			vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
+			vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
+			vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
+			vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
+			vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
+			vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+			vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+
+			-- Slightly advanced example of overriding default behavior and theme
+			vim.keymap.set("n", "<leader>/", function()
+				-- You can pass additional configuration to Telescope to change the theme, layout, etc.
+				builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
+					winblend = 10,
+					previewer = false,
+				}))
+			end, { desc = "[/] Fuzzily search in current buffer" })
+
+			-- It's also possible to pass additional configuration options.
+			vim.keymap.set("n", "<leader>s/", function()
+				builtin.live_grep({
+					grep_open_files = true,
+					prompt_title = "Live Grep in Open Files",
+				})
+			end, { desc = "[S]earch [/] in Open Files" })
+
+			-- Shortcut for searching your Neovim configuration files
+			vim.keymap.set("n", "<leader>sn", function()
+				builtin.find_files({ cwd = vim.fn.stdpath("config") })
+			end, { desc = "[S]earch [N]eovim files" })
+		end,
+	},
+	{
+		-- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+		-- used for completion, annotations and signatures of Neovim apis
+		"folke/lazydev.nvim",
+		ft = "lua",
+		opts = {
+			library = {
+				-- Load luvit types when the `vim.uv` word is found
+				{ path = "luvit-meta/library", words = { "vim%.uv" } },
+			},
+		},
+	},
 	{ -- Useful plugin to show you pending keybinds.
 		"folke/which-key.nvim",
 		event = "VimEnter", -- Sets the loading event to 'VimEnter'
@@ -107,97 +204,11 @@ require("lazy").setup({
 				{ "<leader>s", group = "[S]earch" },
 				{ "<leader>w", group = "[W]rite" },
 				{ "<leader>g", group = "[G]oto" },
-			},
-		},
-		{ -- Fuzzy Finder (files, lsp, etc)
-			"nvim-telescope/telescope.nvim",
-			event = "VimEnter",
-			branch = "0.1.x",
-			dependencies = {
-				"nvim-lua/plenary.nvim",
-				{ -- If encountering errors, see telescope-fzf-native README for installation instructions
-					"nvim-telescope/telescope-fzf-native.nvim",
-
-					build = "make",
-
-					cond = function()
-						return vim.fn.executable("make") == 1
-					end,
-				},
-				{ "nvim-telescope/telescope-ui-select.nvim" },
-
-				-- Useful for getting pretty icons, but requires a Nerd Font.
-				{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
-			},
-
-			config = function()
-				require("telescope").setup({
-					-- You can put your default mappings / updates / etc. in here
-					--  All the info you're looking for is in `:help telescope.setup()`
-					--
-					-- defaults = {
-					--   mappings = {
-					--     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-					--   },
-					-- },
-					-- pickers = {}
-					extensions = {
-						["ui-select"] = {
-							require("telescope.themes").get_dropdown(),
-						},
-					},
-				})
-
-				-- Enable Telescope extensions if they are installed
-				pcall(require("telescope").load_extension, "fzf")
-				pcall(require("telescope").load_extension, "ui-select")
-
-				local builtin = require("telescope.builtin")
-				vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
-				vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-				vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
-				vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
-				vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
-				vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-				vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
-				vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
-				vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-				vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
-
-				-- Slightly advanced example of overriding default behavior and theme
-				vim.keymap.set("n", "<leader>/", function()
-					-- You can pass additional configuration to Telescope to change the theme, layout, etc.
-					builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-						winblend = 10,
-						previewer = false,
-					}))
-				end, { desc = "[/] Fuzzily search in current buffer" })
-
-				-- It's also possible to pass additional configuration options.
-				vim.keymap.set("n", "<leader>s/", function()
-					builtin.live_grep({
-						grep_open_files = true,
-						prompt_title = "Live Grep in Open Files",
-					})
-				end, { desc = "[S]earch [/] in Open Files" })
-
-				-- Shortcut for searching your Neovim configuration files
-				vim.keymap.set("n", "<leader>sn", function()
-					builtin.find_files({ cwd = vim.fn.stdpath("config") })
-				end, { desc = "[S]earch [N]eovim files" })
-			end,
-		},
-		-- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
-		-- used for completion, annotations and signatures of Neovim apis
-		"folke/lazydev.nvim",
-		ft = "lua",
-		opts = {
-			library = {
-				-- Load luvit types when the `vim.uv` word is found
-				{ path = "luvit-meta/library", words = { "vim%.uv" } },
+				{ "<leader>l", group = "[L]azyGit" },
 			},
 		},
 	},
+
 	{ "Bilal2453/luvit-meta", lazy = true },
 
 	{
@@ -342,82 +353,54 @@ require("lazy").setup({
 			},
 		},
 	},
-	{ -- Autocompletion
-
+	{
 		"hrsh7th/nvim-cmp",
-		event = "InsertEnter",
 		dependencies = {
-			-- Snippet Engine & its associated nvim-cmp source
-			{
-				"L3MON4D3/LuaSnip",
-				build = (function()
-					-- Build Step is needed for regex support in snippets.
-					-- This step is not supported in many windows environments.
-					-- Remove the below condition to re-enable on windows.
-					if vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0 then
-						return
-					end
-					return "make install_jsregexp"
-				end)(),
-				dependencies = {
-					-- `friendly-snippets` contains a variety of premade snippets.
-					--    See the README about individual language/framework/plugin snippets:
-					--    https://github.com/rafamadriz/friendly-snippets
-					-- {
-					--   'rafamadriz/friendly-snippets',
-					--   config = function()
-					--     require('luasnip.loaders.from_vscode').lazy_load()
-					--   end,
-					-- },
-				},
-			},
-			"saadparwaiz1/cmp_luasnip",
-
-			-- Adds other completion capabilities.
-			--  nvim-cmp does not ship with all sources by default. They are split
-			--  into multiple repos for maintenance purposes.
 			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-cmdline",
+			"hrsh7th/cmp-vsnip", -- For vsnip users
+			"hrsh7th/vim-vsnip", -- Vsnip snippet engine
 		},
 		config = function()
-			-- See `:help cmp`
 			local cmp = require("cmp")
-			local luasnip = require("luasnip")
-			luasnip.config.setup({})
 
 			cmp.setup({
 				snippet = {
 					expand = function(args)
-						luasnip.lsp_expand(args.body)
+						vim.fn["vsnip#anonymous"](args.body) -- For vsnip users
 					end,
 				},
-				completion = { completeopt = "menu,menuone,noinsert" },
 				mapping = cmp.mapping.preset.insert({
-
-					-- If you prefer more traditional completion keymaps,
-					-- you can uncomment the following lines
 					["<CR>"] = cmp.mapping.confirm({ select = true }),
 					["<Up>"] = cmp.mapping.select_prev_item(), -- Up arrow moves to the previous item
 					["<Down>"] = cmp.mapping.select_next_item(), -- Down arrow moves to the next item
-
-					-- Manually trigger a completion from nvim-cmp.
-					--  Generally you don't need this, because nvim-cmp will display
-					--  completions whenever it has completion options available.
-					-- ["<C-Space>"] = cmp.mapping.complete({}),
 				}),
-				sources = {
-					{
-						name = "lazydev",
-						-- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
-						group_index = 0,
-					},
+				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
+					{ name = "vsnip" },
+				}, {
+					{ name = "buffer" },
+				}),
+			})
+
+			cmp.setup.cmdline({ "/", "?" }, {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = { { name = "buffer" } },
+			})
+
+			cmp.setup.cmdline(":", {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = cmp.config.sources({
 					{ name = "path" },
-				},
+				}, {
+					{ name = "cmdline" },
+				}),
 			})
 		end,
 	},
+
 	{ -- You can easily change to a different colorscheme.
 		-- Change the name of the colorscheme plugin below, and then
 		-- change the command in the config to whatever the name of that colorscheme is.
@@ -520,7 +503,6 @@ require("lazy").setup({
 		-- use opts = {} for passing setup options
 		-- this is equivalent to setup({}) function
 	},
-	{ import = "custom.plugins" },
 }, {
 	ui = {
 		-- If you are using a Nerd Font: set icons to an empty table which will use the

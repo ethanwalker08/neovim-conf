@@ -1,3 +1,3 @@
 return {
-  "evanleck/vim-svelte",
+	"leafOfTree/vim-svelte-plugin",
 }
