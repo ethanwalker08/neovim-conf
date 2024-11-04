@@ -7,7 +7,7 @@ vim.opt.number = true
 
 vim.opt.mouse = "a"
 
-vim.opt.showmode = true
+vim.opt.showmode = false
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -255,7 +255,7 @@ require("lazy").setup({
 
 					-- Rename the variable under your cursor.
 					--  Most Language Servers support renaming across files, etc.
-					map("<leader>r", vim.lsp.buf.rename, "[R]ename")
+					map("<leader>r", vim.lsp.buf.rename, "[r]ename")
 
 					-- WARN: This is not Goto Definition, this is Goto Declaration.
 					--  For example, in C this would take you to the header.
@@ -475,7 +475,6 @@ require("lazy").setup({
 			},
 		},
 	},
-	{ "NvChad/nvim-colorizer.lua" },
 	{
 		"stevearc/dressing.nvim",
 		opts = {},
@@ -487,15 +486,38 @@ require("lazy").setup({
 			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
 			"MunifTanjim/nui.nvim",
-			"3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
 		},
 		keys = {
 			{ "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Toggle Neo-tree" },
 			{ "<leader>w", ":w<cr>", desc = "[W]rite" },
+			{ "<leader>q", ":q<cr>", desc = "[Q]uit" },
 		},
 	},
-	{ "rcarriga/nvim-notify" },
-	{ "RRethy/vim-illuminate" },
+	{
+		"norcalli/nvim-colorizer.lua",
+		config = function()
+			require("colorizer").setup()
+		end,
+	},
+
+	-- Illuminate for highlighting repeated words
+	{
+		"RRethy/vim-illuminate",
+		config = function()
+			require("illuminate").configure({
+				-- Customize your configuration here, if necessary
+			})
+		end,
+	},
+
+	-- Notify for better notifications in Neovim
+	{
+		"rcarriga/nvim-notify",
+		config = function()
+			require("notify").setup()
+			vim.notify = require("notify")
+		end,
+	},
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
@@ -523,3 +545,82 @@ require("lazy").setup({
 		},
 	},
 })
+
+local telescope = require("telescope.builtin")
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
+
+function new_directory_with_telescope()
+	telescope.find_files({
+		prompt_title = "Select Directory",
+		cwd = vim.fn.getcwd(), -- Start in the current working directory
+		find_command = {
+			"powershell",
+			"-Command",
+			"Get-ChildItem -Directory -Recurse | Select-Object -ExpandProperty FullName",
+		}, -- Use PowerShell to list directories only
+		attach_mappings = function(_, map)
+			map("i", "<CR>", function(bufnr)
+				local selection = action_state.get_selected_entry()
+				actions.close(bufnr)
+				local dir_path = selection and selection.path or vim.fn.input("Enter directory path: ", "./")
+				local file_name = vim.fn.input("File name: ")
+
+				if dir_path ~= "" and file_name ~= "" then
+					vim.cmd("edit " .. dir_path .. "\\" .. file_name)
+				else
+					print("Directory or file name not provided.")
+				end
+			end)
+			return true
+		end,
+	})
+end
+
+-- Map <leader>n to use Telescope for new directory selection and file creation
+vim.api.nvim_set_keymap(
+	"n",
+	"<leader>n",
+	":lua new_directory_with_telescope()<CR>",
+	{ noremap = true, silent = true, desc = "[N]ew file" }
+)
+
+-- Function to rename the current file
+function rename_current_file()
+	-- Get the full path of the current file
+	local current_file = vim.api.nvim_buf_get_name(0)
+
+	if current_file == "" then
+		print("No file in current buffer.")
+		return
+	end
+
+	-- Prompt for a new name
+	local new_name = vim.fn.input("New name: ", vim.fn.fnamemodify(current_file, ":t"))
+
+	-- If a new name is provided, rename the file
+	if new_name ~= "" then
+		local dir_path = vim.fn.fnamemodify(current_file, ":h")
+		local new_path = dir_path .. "/" .. new_name
+
+		-- Rename the file
+		local success, err = os.rename(current_file, new_path)
+		if success then
+			-- Update the buffer to the new file path
+			vim.cmd("edit " .. new_path)
+			print("File renamed to " .. new_path)
+		else
+			print("Error renaming file: " .. err)
+		end
+	else
+		print("No new name provided.")
+	end
+end
+
+-- Map <leader>R to rename the current file
+vim.api.nvim_set_keymap(
+	"n",
+	"<leader>R",
+	":lua rename_current_file()<CR>",
+	{ noremap = true, silent = true, desc = "[R]ename current file" }
+)
