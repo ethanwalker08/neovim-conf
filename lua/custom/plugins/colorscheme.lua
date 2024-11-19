@@ -1,68 +1,21 @@
-return {
-	{
-		enabled = true,
-		"catppuccin/nvim",
-		name = "catppuccin",
-		lazy = false, -- make sure we load this during startup if it is your main colorscheme
-		priority = 1000, -- make sure to load this before all the other start plugins
-		config = function()
-			require("catppuccin").setup({
-				flavour = "mocha",
-				show_end_of_buffer = false,
-				default_integrations = true,
-				dim_inactive = {
-					enabled = true,
-					shade = "dark",
-					percentage = 0.50,
-				},
-				styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-					comments = { "italic" }, -- Change the style of comments
-					conditionals = { "bold" },
-					loops = {},
-					functions = { "bold" },
-					keywords = {},
-					strings = {},
-					variables = {},
-					numbers = {},
-					booleans = { "bold" },
-					properties = { "altfont" },
-					types = { "italic" },
-					operators = {},
-					-- miscs = {}, -- Uncomment to turn off hard-coded styles
-				},
-				color_overrides = {
-					mocha = {
-						rosewater = "#ffc0b9",
-						flamingo = "#f5aba3",
-						pink = "#f592d6",
-						mauve = "#c0afff",
-						red = "#ea746c",
-						maroon = "#ff8595",
-						peach = "#fa9a6d",
-						yellow = "#ffe081",
-						green = "#99d783",
-						teal = "#47deb4",
-						sky = "#00d5ed",
-						sapphire = "#00dfce",
-						blue = "#00baee",
-						lavender = "#abbff3",
-						text = "#cccccc",
-						subtext1 = "#bbbbbb",
-						subtext0 = "#aaaaaa",
-						overlay2 = "#999999",
-						overlay1 = "#888888",
-						overlay0 = "#777777",
-						surface2 = "#666666",
-						surface1 = "#555555",
-						surface0 = "#444444",
-						base = "#202020",
-						mantle = "#222222",
-						crust = "#333333",
-					},
-				},
-			})
-
-			vim.cmd.colorscheme("catppuccin")
-		end,
-	},
+return { -- You can easily change to a different colorscheme.
+	-- Change the name of the colorscheme plugin below, and then
+	-- change the command in the config to whatever the name of that colorscheme is.
+	--
+	-- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+	"navarasu/onedark.nvim",
+	priority = 1000, -- Make sure to load this before all the other start plugins.
+	init = function()
+		-- Load the colorscheme here.
+		-- Like many other themes, this one has different styles, and you could load
+		-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+		vim.cmd.colorscheme("onedark")
+		-- Lua
+		require("onedark").setup({
+			style = "darker",
+		})
+		require("onedark").load()
+		-- You can configure highlights by doing something like:
+		vim.cmd.hi("Comment gui=none")
+	end,
 }
