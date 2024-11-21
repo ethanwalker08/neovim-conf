@@ -23,6 +23,8 @@ vim.opt.updatetime = 250
 
 vim.opt.tabstop = 4
 
+vim.opt.termguicolors = true
+
 vim.schedule(function()
 	vim.opt.clipboard = "unnamedplus"
 end)
