@@ -254,13 +254,19 @@ require("lazy").setup({
 					--  Useful when your language has ways of declaring types without an actual implementation.
 					map("<leader>gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
 
+					-- Jump to the type of the word under your cursor.
+					--  Useful when you're not sure what type a variable is and you want to see
+					--  the definition of its *type*, not where it was *defined*.
+					map("<leader>gt", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype Definition")
+
+					-- Execute a code action, usually your cursor needs to be on top of an error
+					-- or a suggestion from your LSP for this to activate.
+					map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
+
 					-- Rename the variable under your cursor.
 					--  Most Language Servers support renaming across files, etc.
 					map("<leader>r", vim.lsp.buf.rename, "[r]ename")
 
-					-- WARN: This is not Goto Definition, this is Goto Declaration.
-					--  For example, in C this would take you to the header.
-					map("<leader>gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
 					if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
 						local highlight_augroup =
@@ -298,10 +304,7 @@ require("lazy").setup({
 				--
 				-- Some languages (like typescript) have entire language plugins that can be useful:
 				--    https://github.com/pmizio/typescript-tools.nvim
-				--
 				-- But for many setups, the LSP (`ts_ls`) will work just fine
-				ts_ls = {},
-				--
 
 				lua_ls = {
 					-- cmd = {...},
@@ -325,6 +328,9 @@ require("lazy").setup({
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
 				"prettierd", -- Used to format JavaScript and TypeScript code
+				"svelte-language-server", -- Used for SvelteKit development
+				"ts_ls", -- Used for TypeScript development
+				"dcm", -- Used for Dart development
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -382,6 +388,8 @@ require("lazy").setup({
 				-- You can use 'stop_after_first' to run the first available formatter from the list
 				javascript = { "prettierd", "prettier", stop_after_first = true },
 				typescript = { "prettierd", "prettier", stop_after_first = true },
+				svelte = { "prettierd", "prettier", stop_after_first = true },
+				dart = { "dcm" },
 			},
 		},
 	},
@@ -397,6 +405,44 @@ require("lazy").setup({
 		},
 		config = function()
 			local cmp = require("cmp")
+			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+			local handlers = require("nvim-autopairs.completion.handlers")
+
+			cmp.event:on(
+				"confirm_done",
+				cmp_autopairs.on_confirm_done({
+					filetypes = {
+						-- "*" is a alias to all filetypes
+						["*"] = {
+							["("] = {
+								kind = {
+									cmp.lsp.CompletionItemKind.Function,
+									cmp.lsp.CompletionItemKind.Method,
+								},
+								handler = handlers["*"],
+							},
+						},
+						lua = {
+							["("] = {
+								kind = {
+									cmp.lsp.CompletionItemKind.Function,
+									cmp.lsp.CompletionItemKind.Method,
+								},
+								---@param char string
+								---@param item table item completion
+								---@param bufnr number buffer number
+								---@param rules table
+								---@param commit_character table<string>
+								handler = function(char, item, bufnr, rules, commit_character)
+									-- Your handler function. Inspect with print(vim.inspect{char, item, bufnr, rules, commit_character})
+								end,
+							},
+						},
+						-- Disable for tex
+						tex = false,
+					},
+				})
+			)
 
 			cmp.setup({
 				snippet = {
@@ -454,6 +500,16 @@ require("lazy").setup({
 				"query",
 				"vim",
 				"vimdoc",
+				"svelte",
+				"typescript",
+				"javascript",
+				"json",
+				"dart",
+				"css",
+				"scss",
+				"yaml",
+				"toml",
+				"tsx",
 			},
 			-- Autoinstall languages that are not installed
 			auto_install = true,
@@ -484,10 +540,14 @@ require("lazy").setup({
 			},
 		},
 	},
+
+	-- makes default vim commands look pretty
 	{
 		"stevearc/dressing.nvim",
 		opts = {},
 	},
+
+	-- neovim file explorer
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v3.x",
@@ -502,6 +562,8 @@ require("lazy").setup({
 			{ "<leader>q", ":q<cr>", desc = "[Q]uit" },
 		},
 	},
+
+	-- adds color to color codes in your files
 	{
 		"norcalli/nvim-colorizer.lua",
 		config = function()
@@ -527,6 +589,8 @@ require("lazy").setup({
 			vim.notify = require("notify")
 		end,
 	},
+
+	-- makes it so when you insert a ( it automatically adds a )
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
