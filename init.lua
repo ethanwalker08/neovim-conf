@@ -334,7 +334,6 @@ require("lazy").setup({
 				"svelte", -- Used for SvelteKit development
 				"ts_ls", -- Used for TypeScript development
 				"dcm", -- Used for Dart development
-				"dart_debug_adapter", -- Used for Dart development debugging
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
