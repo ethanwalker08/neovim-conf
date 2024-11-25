@@ -328,11 +328,13 @@ require("lazy").setup({
 			-- for you, so that they are available from within Neovim.
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
+				"lua_ls", -- Used for Lua development
 				"stylua", -- Used to format Lua code
 				"prettierd", -- Used to format JavaScript and TypeScript code
-				"svelte-language-server", -- Used for SvelteKit development
+				"svelte", -- Used for SvelteKit development
 				"ts_ls", -- Used for TypeScript development
 				"dcm", -- Used for Dart development
+				"dart_debug_adapter", -- Used for Dart development debugging
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -512,6 +514,7 @@ require("lazy").setup({
 				"yaml",
 				"toml",
 				"tsx",
+				"dart",
 			},
 			-- Autoinstall languages that are not installed
 			auto_install = true,
