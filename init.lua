@@ -293,6 +293,10 @@ require("lazy").setup({
 							end,
 						})
 					end
+
+					vim.g.markdown_fenced_languages = {
+						"ts=typescript",
+					}
 				end,
 			})
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -323,7 +327,12 @@ require("lazy").setup({
 					},
 				},
 			}
-			require("mason").setup()
+			require("mason").setup({
+				registries = {
+					"github:mason-org/mason-registry",
+					"github:crashdummyy/mason-registry",
+				},
+			})
 			-- You can add other tools here that you want Mason to install
 			-- for you, so that they are available from within Neovim.
 			local ensure_installed = vim.tbl_keys(servers or {})
@@ -764,3 +773,4 @@ vim.api.nvim_set_keymap(
 	":lua create_sveltekit_route()<CR>",
 	{ noremap = true, silent = true, desc = "[N]ew SvelteKit Route" }
 )
+require("lspconfig").denols.setup({})
