@@ -20,8 +20,6 @@ vim.opt.signcolumn = "yes"
 -- Decrease update time
 vim.opt.updatetime = 250
 
-vim.opt.tabstop = 4
-
 vim.opt.termguicolors = true
 
 vim.schedule(function()
@@ -220,3 +218,12 @@ vim.api.nvim_set_keymap(
 	{ noremap = true, silent = true, desc = "[N]ew SvelteKit Route" }
 )
 require("lspconfig").denols.setup({})
+
+-- if language is js or ts then tabstop = 2 else tabstop = 4
+if vim.bo.filetype == "javascript" or vim.bo.filetype == "typescript" then
+	vim.bo.tabstop = 2
+	vim.bo.shiftwidth = 2
+else
+	vim.bo.tabstop = 4
+	vim.bo.shiftwidth = 4
+end
