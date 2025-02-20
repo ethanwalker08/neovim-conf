@@ -1,3 +1,4 @@
+-- neovim file explorer
 return
 -- neovim file explorer
 {
@@ -10,7 +11,5 @@ return
 	},
 	keys = {
 		{ "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Toggle Neo-tree" },
-		{ "<leader>w", ":w<cr>", desc = "[W]rite" },
-		{ "<leader>q", ":q<cr>", desc = "[Q]uit" },
 	},
 }

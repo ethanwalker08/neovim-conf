@@ -45,6 +45,8 @@ return { -- Useful plugin to show you pending keybinds.
 			{ "<leader>g", group = "[G]oto" },
 			{ "<leader>l", group = "[L]azyGit" },
 			{ "<leader>x", group = "Trouble" },
+			{ "<leader>q", group = "[Q]uit" },
+			{ "<leader>c", group = "[C]ode [A]ctions" },
 		},
 	},
 }
