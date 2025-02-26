@@ -12,6 +12,13 @@ return {
 					enabled = true,
 				},
 				-- You can include other configuration options here
+				debugger = {
+					enabled = true,
+					register_configurations = function(_)
+						require("dap").configurations.dart = {}
+						require("dap.ext.vscode").load_launchjs()
+					end,
+				},
 			})
 		end,
 	},

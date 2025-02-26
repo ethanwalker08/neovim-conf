@@ -47,6 +47,9 @@ return { -- Useful plugin to show you pending keybinds.
 			{ "<leader>x", group = "Trouble" },
 			{ "<leader>q", group = "[Q]uit" },
 			{ "<leader>c", group = "[C]ode [A]ctions" },
+			{ "<leader>d", group = "[D]ebugger" },
+			{ "<leader>dh", group = "[D]ebug [H]over variables" },
+			{ "<leader>df", group = "[D]ebug [F]lutter" },
 		},
 	},
 }
