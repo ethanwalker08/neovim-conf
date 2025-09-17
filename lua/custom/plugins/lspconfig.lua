@@ -122,9 +122,6 @@ return {
 		vim.list_extend(ensure_installed, {
 			"lua_ls", -- Used for Lua development
 			"stylua", -- Used to format Lua code
-			"prettierd", -- Used to format JavaScript and TypeScript code
-			"svelte", -- Used for SvelteKit development
-			"ts_ls", -- Used for TypeScript development
 			"dcm", -- Used for Dart development
 		})
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
