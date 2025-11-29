@@ -1,8 +1,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-vim.g.have_nerd_font = true
+vim.g.have_nerd_font = true -- If you can't run neovim its probably because you don't have a nerd font so set this to false or install one
 
 vim.opt.number = true
+vim.opt.showmode = true
 
 vim.opt.mouse = "a"
 
@@ -19,8 +20,6 @@ vim.opt.signcolumn = "yes"
 
 -- Decrease update time
 vim.opt.updatetime = 250
-
-vim.opt.termguicolors = true
 
 vim.schedule(function()
 	vim.opt.clipboard = "unnamedplus"
@@ -55,107 +54,9 @@ require("lazy").setup({
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 
 	{ import = "custom.plugins" },
-}, {
-	ui = {
-		-- If you are using a Nerd Font: set icons to an empty table which will use the
-		-- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-		icons = vim.g.have_nerd_font and {} or {
-			config = "🛠",
-			event = "📅",
-			ft = "📂",
-			init = "⚙",
-			keys = "🗝",
-			plugin = "🔌",
-			runtime = "💻",
-			require = "🌙",
-			source = "📄",
-			start = "🚀",
-			task = "📌",
-			lazy = "💤 ",
-		},
-	},
 })
 
-local telescope = require("telescope.builtin")
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
-
-function new_directory_with_telescope()
-	telescope.find_files({
-		prompt_title = "Select Directory",
-		cwd = vim.fn.getcwd(), -- Start in the current working directory
-		find_command = {
-			"powershell",
-			"-Command",
-			"Get-ChildItem -Directory -Recurse | Select-Object -ExpandProperty FullName",
-		}, -- Use PowerShell to list directories only
-		attach_mappings = function(_, map)
-			map("i", "<CR>", function(bufnr)
-				local selection = action_state.get_selected_entry()
-				actions.close(bufnr)
-				local dir_path = selection and selection.path or vim.fn.input("Enter directory path: ", "./")
-				local file_name = vim.fn.input("File name: ")
-
-				if dir_path ~= "" and file_name ~= "" then
-					vim.cmd("edit " .. dir_path .. "\\" .. file_name)
-				else
-					print("Directory or file name not provided.")
-				end
-			end)
-			return true
-		end,
-	})
-end
-
--- Map <leader>n to use Telescope for new directory selection and file creation
-vim.api.nvim_set_keymap(
-	"n",
-	"<leader>n",
-	":lua new_directory_with_telescope()<CR>",
-	{ noremap = true, silent = true, desc = "[N]ew file" }
-)
-
--- Function to rename the current file
-function rename_current_file()
-	-- Get the full path of the current file
-	local current_file = vim.api.nvim_buf_get_name(0)
-
-	if current_file == "" then
-		print("No file in current buffer.")
-		return
-	end
-
-	-- Prompt for a new name
-	local new_name = vim.fn.input("New name: ", vim.fn.fnamemodify(current_file, ":t"))
-
-	-- If a new name is provided, rename the file
-	if new_name ~= "" then
-		local dir_path = vim.fn.fnamemodify(current_file, ":h")
-		local new_path = dir_path .. "/" .. new_name
-
-		-- Rename the file
-		local success, err = os.rename(current_file, new_path)
-		if success then
-			-- Update the buffer to the new file path
-			vim.cmd("edit " .. new_path)
-			print("File renamed to " .. new_path)
-		else
-			print("Error renaming file: " .. err)
-		end
-	else
-		print("No new name provided.")
-	end
-end
-
--- Map <leader>R to rename the current file
-vim.api.nvim_set_keymap(
-	"n",
-	"<leader>R",
-	":lua rename_current_file()<CR>",
-	{ noremap = true, silent = true, desc = "[R]ename current file" }
-)
-
-function create_sveltekit_route()
+function CreateSveltekitRoute()
 	-- Prompt for the directory where the new route should go
 	local route_directory = vim.fn.input("Route directory (relative to src/routes/): ", "", "file")
 	if route_directory == "" then
@@ -199,11 +100,19 @@ export const load = async () => {
 
 	-- Write the +page.svelte file
 	local svelte_file_handle = io.open(svelte_file, "w")
+	if not svelte_file_handle then
+		print("Error creating file: " .. svelte_file)
+		return
+	end
 	svelte_file_handle:write(svelte_content)
 	svelte_file_handle:close()
 
 	-- Write the +page.server.ts file
 	local server_file_handle = io.open(server_file, "w")
+	if not server_file_handle then
+		print("Error creating file: " .. server_file)
+		return
+	end
 	server_file_handle:write(server_content)
 	server_file_handle:close()
 
@@ -214,16 +123,7 @@ end
 vim.api.nvim_set_keymap(
 	"n",
 	"<leader>N",
-	":lua create_sveltekit_route()<CR>",
+	":lua CreateSveltekitRoute()<CR>",
 	{ noremap = true, silent = true, desc = "[N]ew SvelteKit Route" }
 )
 require("lspconfig").denols.setup({})
-
--- if language is js or ts then tabstop = 2 else tabstop = 4
-if vim.bo.filetype == "javascript" or vim.bo.filetype == "typescript" then
-	vim.bo.tabstop = 2
-	vim.bo.shiftwidth = 2
-else
-	vim.bo.tabstop = 4
-	vim.bo.shiftwidth = 4
-end
