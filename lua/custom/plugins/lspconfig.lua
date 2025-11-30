@@ -3,12 +3,11 @@ return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
 		-- Automatically install LSPs and related tools to stdpath for Neovim
-		{ "williamboman/mason.nvim", config = true }, -- NOTE: Must be loaded before dependants
+		{ "williamboman/mason.nvim", config = true },
 		"williamboman/mason-lspconfig.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
 
 		-- Useful status updates for LSP.
-		-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
 		{ "j-hui/fidget.nvim", opts = {} },
 
 		-- Allows extra capabilities provided by nvim-cmp
@@ -18,9 +17,6 @@ return {
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 			callback = function(event)
-				-- NOTE: Remember that Lua is a real programming language, and as such it is possible
-				-- to define small helper and utility functions so you don't have to repeat yourself.
-				--
 				-- In this case, we create a function that lets us more easily define mappings specific
 				-- for LSP related items. It sets the mode, buffer and description for us each time.
 				local map = function(keys, func, desc, mode)
@@ -30,27 +26,26 @@ return {
 
 				-- Jump to the definition of the word under your cursor.
 				--  This is where a variable was first declared, or where a function is defined, etc.
-				--  To jump back, press <C-t>.
-				map("<leader>gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
+				map("<leader>gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 
-				-- Find references for the word under your cursor.
-				map("<leader>gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+				-- List all references for the word under your cursor.
+				map("<leader>cr", vim.lsp.buf.references, "[C]ode [R]eferences")
 
 				-- Jump to the implementation of the word under your cursor.
 				--  Useful when your language has ways of declaring types without an actual implementation.
-				map("<leader>gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
+				map("<leader>gI", vim.lsp.buf.implementation, "View [I]mplementation")
 
 				-- Jump to the type of the word under your cursor.
 				--  Useful when you're not sure what type a variable is and you want to see
 				--  the definition of its *type*, not where it was *defined*.
-				map("<leader>gt", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype Definition")
+				map("<leader>gt", vim.lsp.buf.type_definition, "[G]oto [T]ype")
 
 				-- Execute a code action, usually your cursor needs to be on top of an error
 				-- or a suggestion from your LSP for this to activate.
 				map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
 
-				-- View code docs
-				map("<leader>cd", vim.lsp.buf.hover, "Show [C]ode [D]ocs", { "n" })
+				-- View code docs fallback if auto-hover timer isn't working or is too slow
+				map("<leader>cd", vim.lsp.buf.hover, "Show [C]ode [D]ocs", { "n", "x" })
 
 				-- Rename the variable under your cursor.
 				--  Most Language Servers support renaming across files, etc.
@@ -79,10 +74,6 @@ return {
 						end,
 					})
 				end
-
-				vim.g.markdown_fenced_languages = {
-					"ts=typescript",
-				}
 			end,
 		})
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -108,7 +99,7 @@ return {
 							callSnippet = "Replace",
 						},
 						-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-						-- diagnostics = { disable = { 'missing-fields' } },
+						diagnostics = { disable = { "missing-fields" } },
 					},
 				},
 			},
@@ -116,7 +107,7 @@ return {
 		require("mason").setup({
 			registries = {
 				"github:mason-org/mason-registry",
-				"github:crashdummyy/mason-registry",
+				-- "github:crashdummyy/mason-registry", -- For .net stuff uncomment if you need it for like a blazor or razor project or something
 			},
 		})
 		-- You can add other tools here that you want Mason to install
@@ -125,7 +116,6 @@ return {
 		vim.list_extend(ensure_installed, {
 			"lua_ls", -- Used for Lua development
 			"stylua", -- Used to format Lua code
-			"dcm", -- Used for Dart development
 		})
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
