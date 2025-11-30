@@ -12,7 +12,7 @@ return { -- Useful plugin to show you pending keybinds.
 			{ "<leader>w", group = "[W]rite" },
 			{ "<leader>g", group = "[G]oto" },
 			{ "<leader>l", group = "[L]azyGit" },
-			{ "<leader>x", group = "Trouble" },
+			{ "<leader>x", group = "View Issues" },
 			{ "<leader>q", group = "[Q]uit" },
 			{ "<leader>c", group = "[C]ode [A]ctions" },
 			{ "<leader>d", group = "[D]ebugger" },
