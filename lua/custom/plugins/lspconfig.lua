@@ -49,6 +49,9 @@ return {
 				-- or a suggestion from your LSP for this to activate.
 				map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
 
+				-- View code docs
+				map("<leader>cd", vim.lsp.buf.hover, "Show [C]ode [D]ocs", { "n" })
+
 				-- Rename the variable under your cursor.
 				--  Most Language Servers support renaming across files, etc.
 				map("<leader>r", vim.lsp.buf.rename, "[r]ename")
