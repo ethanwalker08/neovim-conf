@@ -5,6 +5,10 @@ vim.g.have_nerd_font = true -- If you can't run neovim its probably because you 
 vim.opt.number = true
 vim.opt.showmode = true
 
+vim.o.autoindent = true
+vim.o.smartindent = true
+vim.o.smoothscroll = true
+
 vim.opt.mouse = "a"
 
 vim.opt.showmode = false
