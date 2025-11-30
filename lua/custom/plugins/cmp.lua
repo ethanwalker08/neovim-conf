@@ -12,8 +12,12 @@ return {
 	},
 	config = function()
 		local cmp = require("cmp")
-
 		cmp.setup({
+			completion = {
+				-- Only show completions if we've typed at least 2 characters and not on a whitespace
+				autocomplete = { require("cmp.types").cmp.TriggerEvent.TextChanged },
+				keyword_length = 2,
+			},
 			snippet = {
 				expand = function(args)
 					require("luasnip").lsp_expand(args.body)
