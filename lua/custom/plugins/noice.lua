@@ -15,7 +15,7 @@ return {
 				vim.notify = require("notify").setup({
 					merge_duplicates = true,
 					render = "wrapped-compact",
-					max_width = 25,
+					max_width = 80,
 					stages = "slide",
 					timeout = 3000,
 				})
