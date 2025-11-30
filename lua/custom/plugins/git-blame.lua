@@ -10,7 +10,7 @@ return {
 	opts = {
 		-- your configuration comes here
 		enabled = true, -- if you want to enable the plugin
-		message_template = "<date>: <summary>", -- template for inline blame
+		message_template = "	<date>: <summary>", -- template for inline blame
 		date_format = "%r", -- template for the date, check Date format section for more options
 		message_when_not_committed = "Unstaged changes",
 		gitblame_delay = 500, -- delay in milliseconds, 500 = show blame after half a second
