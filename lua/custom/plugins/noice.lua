@@ -14,7 +14,8 @@ return {
 				-- Make it render in minimal style
 				vim.notify = require("notify").setup({
 					merge_duplicates = true,
-					render = "minimal",
+					render = "wrapped-compact",
+					max_width = 25,
 					stages = "slide",
 					timeout = 3000,
 				})
