@@ -94,7 +94,3 @@ Feel free to fork and adapt this configuration for your needs!
 ## 📄 License
 
 MIT License - Use freely!
-
----
-
-**Created for Windows + VSCode + Neovim integration** 🎉
