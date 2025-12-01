@@ -2,13 +2,13 @@
 
 A complete Neovim configuration that works seamlessly in both native Neovim and VSCode with the VSCode Neovim extension to customize to your liking.
 
-**If you want to use my config in just native neovim without vs code switch git branch to `main` and use that config instead**
-
 ## 🎯 Quick Start
 
 ### For Native Neovim
 
 Just use `nvim` in your terminal - everything works automatically!
+
+**If you want to use my config in only native neovim without the vs code stuff switch git branch to `main` and use that config instead**
 
 ## 📚 Documentation
 
@@ -89,8 +89,8 @@ All plugins are intelligently replaced by native VSCode features when running in
 
 ## 🤝 Contributing
 
-Feel free to fork and adapt this configuration for your needs!
+Feel free to fork and adapt this configuration for your needs, but please don't contribute directly to this config. It's my personal configuration so use it if you like it but if you want to change something, copy this and make your own modifications on your own git repo :)
 
 ## 📄 License
 
-MIT License - Use freely!
+MIT License - Use freely however you want!
