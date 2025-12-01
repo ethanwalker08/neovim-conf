@@ -2,9 +2,10 @@
 
 A complete Neovim configuration that works out right after installing neovim on any system with a nerd font.
 
-**If you want to use my config inside VS Code instead of through the terminal only, switch to the `windows-vscode-with-neovim` branch via git to use the config tailored for using Neovim inside VSCode**
-
 ## 🎯 Quick Start
+
+### VSCode Setup
+**If you want to use my config inside VS Code instead of through the terminal only, switch to the `windows-vscode-with-neovim` branch via git to use the config tailored for using Neovim inside VSCode**
 
 ### To use Neovim with this config in your terminal
 
