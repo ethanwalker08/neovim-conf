@@ -2,6 +2,8 @@
 
 A complete Neovim configuration that works seamlessly in both native Neovim and VSCode with the VSCode Neovim extension to customize to your liking.
 
+**If you want to use my config in just native neovim without vs code switch git branch to `main` and use that config instead**
+
 ## 🎯 Quick Start
 
 ### For Native Neovim
