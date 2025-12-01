@@ -1,0 +1,117 @@
+[
+  {
+    "key": "space s f",
+    "command": "workbench.action.quickOpen",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "space s g",
+    "command": "workbench.action.findInFiles",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "space e",
+    "command": "workbench.view.explorer",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "space g d",
+    "command": "editor.action.revealDefinition",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "space g r",
+    "command": "references-view.findReferences",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "space c a",
+    "command": "editor.action.quickFix",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "space r",
+    "command": "editor.action.rename",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "space f",
+    "command": "editor.action.formatDocument",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "space w",
+    "command": "workbench.action.files.save",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "ctrl+right",
+    "command": "workbench.action.nextEditor",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "ctrl+left",
+    "command": "workbench.action.previousEditor",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "space x x",
+    "command": "workbench.actions.view.problems",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "escape",
+    "command": "vscode-neovim.escape",
+    "when": "neovim.mode != normal && editorTextFocus"
+  },
+  {
+    "key": "escape",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "!editorTextFocus"
+  },
+  {
+    "key": "escape",
+    "command": "inlineChat.close",
+    "when": "inlineChatVisible"
+  },
+  {
+    "key": "space t",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "ctrl+f",
+    "command": "actions.find",
+    "when": "!editorTextFocus && neovim.mode == normal"
+  },
+  {
+    "key": "space /",
+    "command": "actions.find",
+    "when": "editorTextFocus && neovim.mode == normal"
+  },
+  {
+    "key": "space d b",
+    "command": "editor.debug.action.toggleBreakpoint",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "inlineChat.start",
+    "when": "editorTextFocus && (neovim.mode == normal || neovim.mode == visual) && !editorReadonly"
+  },
+  {
+    "key": "g g",
+    "command": "cursorTop",
+    "when": "editorTextFocus && neovim.mode == normal && !editorReadonly"
+  },
+  {
+    "key": "space q q",
+    "command": "workbench.action.closeActiveEditor",
+    "when": "neovim.mode == normal && editorTextFocus"
+  },
+  {
+    "key": "ctrl+r",
+    "command": "redo",
+    "when": "editorTextFocus && neovim.mode == normal"
+  }
+]

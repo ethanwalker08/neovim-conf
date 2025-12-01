@@ -1,5 +1,5 @@
 return {
-	-- GitHub Copilot
+	-- GitHub Copilot for Windows
 	"github/copilot.vim",
 	event = "BufEnter",
 	config = function()

@@ -1,29 +1,31 @@
+-- Check if running in VSCode
+if vim.g.vscode then
+	-- Load VSCode-specific configuration
+	dofile(vim.fn.stdpath("config") .. "/vscode-init.lua")
+	return
+end
+
+-- Regular Neovim configuration (when not in VSCode)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-vim.g.have_nerd_font = true -- If you can't run neovim its probably because you don't have a nerd font so set this to false or install one
+vim.g.have_nerd_font = true
 
 vim.opt.number = true
-vim.opt.showmode = true
-
-vim.o.autoindent = true
-vim.o.smartindent = true
-vim.o.smoothscroll = true
+vim.opt.relativenumber = false
 
 vim.opt.mouse = "a"
 
-vim.opt.showmode = false
-
--- Enable break indent
-vim.opt.breakindent = true
+vim.opt.showmode = true
 
 -- Save undo history
 vim.opt.undofile = true
 
--- Keep signcolumn on by default
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "auto"
 
 -- Decrease update time
-vim.opt.updatetime = 250
+vim.opt.updatetime = 500
+
+vim.opt.termguicolors = true
 
 vim.schedule(function()
 	vim.opt.clipboard = "unnamedplus"
@@ -58,76 +60,25 @@ require("lazy").setup({
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 
 	{ import = "custom.plugins" },
+}, {
+	ui = {
+		-- If you are using a Nerd Font: set icons to an empty table which will use the
+		-- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
+		icons = vim.g.have_nerd_font and {} or {
+			config = "🛠",
+			event = "📅",
+			ft = "📂",
+			init = "⚙",
+			keys = "🗝",
+			plugin = "🔌",
+			runtime = "💻",
+			require = "🌙",
+			source = "📄",
+			start = "🚀",
+			task = "📌",
+			lazy = "💤 ",
+		},
+	},
 })
 
-function CreateSveltekitRoute()
-	-- Prompt for the directory where the new route should go
-	local route_directory = vim.fn.input("Route directory (relative to src/routes/): ", "", "file")
-	if route_directory == "" then
-		print("No directory provided.")
-		return
-	end
-
-	-- Prompt for the route name
-	local route_name = vim.fn.input("Route name: ")
-	if route_name == "" then
-		print("No route name provided.")
-		return
-	end
-
-	-- Define the full path for the new route
-	local base_path = "src/routes/" .. route_directory .. "/" .. route_name
-	local svelte_file = base_path .. "/+page.svelte"
-	local server_file = base_path .. "/+page.server.ts"
-
-	-- Create the route directory if it doesn't exist
-	vim.fn.mkdir(base_path, "p")
-
-	-- Add boilerplate content for +page.svelte
-	local svelte_content = [[
-<script>
-  // Add your component logic here
-</script>
-
-<h1>]] .. route_name .. [[</h1>
-<p>This is the new SvelteKit route for ]] .. route_name .. [[.</p>
-]]
-	local server_content = [[
-// +page.server.ts for route ]] .. route_name .. [[
-
-export const load = async () => {
-  return {
-    // Your data here
-  };
-};
-]]
-
-	-- Write the +page.svelte file
-	local svelte_file_handle = io.open(svelte_file, "w")
-	if not svelte_file_handle then
-		print("Error creating file: " .. svelte_file)
-		return
-	end
-	svelte_file_handle:write(svelte_content)
-	svelte_file_handle:close()
-
-	-- Write the +page.server.ts file
-	local server_file_handle = io.open(server_file, "w")
-	if not server_file_handle then
-		print("Error creating file: " .. server_file)
-		return
-	end
-	server_file_handle:write(server_content)
-	server_file_handle:close()
-
-	print("SvelteKit route created at " .. base_path)
-end
-
--- Map <leader>N to create a new SvelteKit route
-vim.api.nvim_set_keymap(
-	"n",
-	"<leader>N",
-	":lua CreateSveltekitRoute()<CR>",
-	{ noremap = true, silent = true, desc = "[N]ew SvelteKit Route" }
-)
 require("lspconfig").denols.setup({})

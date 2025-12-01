@@ -1,0 +1,76 @@
+{
+  "workbench.colorTheme": "Atom One Dark",
+  "workbench.iconTheme": "vscode-icons",
+  "editor.stickyScroll.enabled": false,
+  "files.autoSave": "onFocusChange",
+  "editor.fontFamily": "MesloLGL Nerd Font Mono",
+  "editor.fontLigatures": false,
+  "terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.enableImages": true,
+  "terminal.integrated.gpuAcceleration": "on",
+  "terminal.integrated.suggest.enabled": true,
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell"
+    }
+  },
+  "svelte.plugin.svelte.defaultScriptLanguage": "ts",
+  "svelte.enable-ts-plugin": true,
+  "git.confirmSync": false,
+  "git.autofetch": "all",
+  "git.enableSmartCommit": true,
+  "git.openRepositoryInParentFolders": "never",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "dart.debugExternalPackageLibraries": false,
+  "dart.debugSdkLibraries": false,
+  "editor.minimap.enabled": false,
+  "workbench.startupEditor": "none",
+  "editor.formatOnSave": true,
+  "vsicons.dontShowNewVersionMessage": true,
+  "terminal.integrated.allowedLinkSchemes": [
+    "file",
+    "http",
+    "https",
+    "mailto",
+    "vscode",
+    "vscode-insiders",
+    "docker-desktop"
+  ],
+  "remote.portsAttributes": {
+    "54321": {
+      "protocol": "http"
+    }
+  },
+  "workbench.editor.enablePreview": false,
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "update.showReleaseNotes": false,
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
+  "chat.mcp.autostart": "newAndOutdated",
+  "dart.flutterSdkPath": "E:\\Flutter\\flutter",
+  "terminal.integrated.fontFamily": "MesloLGL Nerd Font Mono",
+  "vscode-neovim.neovimExecutablePaths.win32": "C:\\Program Files\\Neovim\\bin\\nvim.exe",
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+  "vscode-neovim.neovimInitVimPaths.win32": "C:\\Users\\YourUser\\AppData\\Local\\nvim\\init.lua",
+  "vscode-neovim.ctrlKeysForInsertMode": [
+  ],
+  "vscode-neovim.ctrlKeysForNormalMode": [
+  ],
+  "vscode-neovim.compositeTimeout": 1000,
+  "vscode-neovim.logOutputToConsole": false,
+  "workbench.list.typeNavigationMode": "automatic",
+  "editor.renderWhitespace": "none",
+  "editor.guides.indentation": true,
+  "editor.occurrencesHighlight": "singleFile",
+  "editor.selectionHighlight": true
+}
